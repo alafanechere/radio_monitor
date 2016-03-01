@@ -1,3 +1,4 @@
+import datetime
 import requests
 
 
@@ -25,3 +26,12 @@ class Collector():
     def get_current_metadata(self):
         json_response = self.make_request()
         return self.parse_request(json_response)
+
+
+class Metadata():
+
+    def __init__(self, title, artist, broadcaster, broadcast_time):
+        self.title = title
+        self.artist = artist
+        self.broadcaster = broadcaster
+        self.broadcast_time = broadcast_time
