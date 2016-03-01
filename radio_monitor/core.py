@@ -19,13 +19,14 @@ class Collector():
         except requests.HTTPError, e:
             raise e
 
-    def parse_request(self, json_dump):
+    def parse_request(self, json_dump, current_time):
         # should return a dict of metadata
         raise NotImplementedError
 
     def get_current_metadata(self):
         json_response = self.make_request()
-        return self.parse_request(json_response)
+        current_time = datetime.datetime.now()
+        return self.parse_request(json_response, current_time)
 
 
 class Metadata():
@@ -44,8 +45,7 @@ class FipCollector(Collector):
     def __init__(self, crawl_frequency=1):
         Collector.__init__(self, crawl_frequency)
 
-    def parse_request(self, json_dump):
-        current_time = datetime.datetime.now()
+    def parse_request(self, json_dump, current_time):
         metadata = None
 
         for key, value in json_dump['steps'].iteritems():
