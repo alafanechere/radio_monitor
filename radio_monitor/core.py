@@ -35,3 +35,24 @@ class Metadata():
         self.artist = artist
         self.broadcaster = broadcaster
         self.broadcast_time = broadcast_time
+
+
+class FipCollector(Collector):
+    RADIO_NAME = "FIP"
+    _API_ENDPOINT = "http://www.fipradio.fr/livemeta/7"
+
+    def __init__(self, crawl_frequency=1):
+        Collector.__init__(self, crawl_frequency)
+
+    def parse_request(self, json_dump):
+        current_time = datetime.datetime.now()
+        metadata = None
+
+        for key, value in json_dump['steps'].iteritems():
+            if value['start'] < current_time < value['stop']:
+                title = value['title']
+                artist = value['authors']
+                metadata = Metadata(title, artist, self.RADIO_NAME, current_time)
+                break
+
+        return metadata
