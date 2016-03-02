@@ -41,3 +41,17 @@ def test_metadata_fun():
     assert current_metadata.year is None
     assert isinstance(current_metadata.broadcaster, str)
     assert isinstance(current_metadata.broadcast_time, datetime.datetime)
+
+
+def test_metadata_nrj():
+    nrj_collector = core.NrjCollector()
+    current_metadata = nrj_collector.get_current_metadata()
+
+    if current_metadata is not None:
+        assert isinstance(current_metadata.title, unicode)
+        assert isinstance(current_metadata.artist, unicode)
+        assert current_metadata.album is None
+        assert current_metadata.label is None
+        assert current_metadata.year is None
+        assert isinstance(current_metadata.broadcaster, str)
+        assert isinstance(current_metadata.broadcast_time, datetime.datetime)
