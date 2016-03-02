@@ -83,12 +83,17 @@ class NovaCollector(Collector):
 
     def parse_response(self, json_dump, current_time):
         metadata = None
-        track = json_dump['track']
-        if len(track['id']) > 0:
-            soup = BeautifulSoup(track['markup'])
-            artist = soup.find("div", class_="artist").getText()
-            title = soup.find("div", class_="title").getText()
-            metadata = models.Metadata(title, artist, self.RADIO_NAME, current_time)
+
+        try:
+            track = json_dump['track']
+            if len(track['id']) > 0:
+                soup = BeautifulSoup(track['markup'])
+                artist = soup.find("div", class_="artist").getText()
+                title = soup.find("div", class_="title").getText()
+                metadata = models.Metadata(title, artist, self.RADIO_NAME, current_time)
+
+        except TypeError:
+            print "Error getting nova API"
 
         return metadata
 
