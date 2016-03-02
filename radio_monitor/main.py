@@ -1,32 +1,52 @@
 import collectors
 import time
-from threading import Thread
+import threading
 
 
-class Pinger(Thread):
+class Pinger(threading.Thread):
 
     def __init__(self, collector):
-        Thread.__init__(self)
+        super(Pinger, self).__init__()
         self.collector = collector
+        self._stop = threading.Event()
 
     def run(self):
-        while True:
+        while self.stopped() is False:
             meta = self.collector.get_current_metadata()
             print self.collector.RADIO_NAME
             print meta
             print "--------"
             time.sleep(self.collector.crawl_frequency * 60)
 
+    def stop(self):
+        self._stop.set()
+
+    def stopped(self):
+        return self._stop.isSet()
+
 
 def main():
-    fip_thread = Pinger(collectors.FipCollector())
-    nova_thread = Pinger(collectors.NovaCollector())
+    threads = [Pinger(collectors.FipCollector()),
+               Pinger(collectors.NovaCollector()),
+               Pinger(collectors.NrjCollector()),
+               Pinger(collectors.FunRadioCollector()),
+               Pinger(collectors.SkyrockCollector())]
 
-    fip_thread.start()
-    nova_thread.start()
+    for radio_thread in threads:
+        radio_thread.start()
 
-    fip_thread.join()
-    nova_thread.join()
+    on = True
+    while on:
+        try:
+            pass
+        except KeyboardInterrupt:
+            on = False
+
+    for radio_thread in threads:
+        radio_thread.stop()
+
+    for radio_thread in threads:
+        radio_thread.join()
 
 if __name__ == '__main__':
     main()
