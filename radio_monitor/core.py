@@ -56,19 +56,34 @@ class Metadata():
         self.broadcast_time = broadcast_time
 
     def __str__(self):
-        return "Title: {}\n" \
-               "Artist: {}\n" \
-               "Album: {}\n" \
-               "Label: {}\n" \
-               "Year: {}\n" \
-               "Broadcast_time: {}\n" \
-               "Broadcaster: {}".format(self.title.encode('ascii', 'ignore'),
-                                        self.artist.encode('ascii', 'ignore'),
-                                        self.album,
-                                        self.label,
-                                        self.year,
-                                        self.broadcast_time,
-                                        self.broadcaster)
+        try:
+            return "Title: {}\n" \
+                   "Artist: {}\n" \
+                   "Album: {}\n" \
+                   "Label: {}\n" \
+                   "Year: {}\n" \
+                   "Broadcast_time: {}\n" \
+                   "Broadcaster: {}".format(self.title.encode('ascii', 'ignore'),
+                                            self.artist.encode('ascii', 'ignore'),
+                                            self.album,
+                                            self.label,
+                                            self.year,
+                                            self.broadcast_time,
+                                            self.broadcaster)
+        except UnicodeEncodeError:
+            return "Title: {}\n" \
+                   "Artist: {}\n" \
+                   "Album: {}\n" \
+                   "Label: {}\n" \
+                   "Year: {}\n" \
+                   "Broadcast_time: {}\n" \
+                   "Broadcaster: {}".format(self.title.encode('ascii', 'ignore'),
+                                            self.artist.encode('ascii', 'ignore'),
+                                            self.album.encode('ascii', 'ignore'),
+                                            self.label.encode('ascii', 'ignore'),
+                                            self.year,
+                                            self.broadcast_time,
+                                            self.broadcaster)
 
 
 class FipCollector(Collector):
