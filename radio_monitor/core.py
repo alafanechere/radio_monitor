@@ -56,8 +56,8 @@ class FipCollector(Collector):
             value['end'] = datetime.datetime.fromtimestamp(value['end'])
 
             if 'title' in value and 'authors' in value and value['start'] < current_time < value['end']:
-                title = value['title']
-                artist = value['authors']
+                title = value['title'].lower()
+                artist = value['authors'].lower()
                 metadata = Metadata(title, artist, self.RADIO_NAME, current_time)
                 break
         return metadata
