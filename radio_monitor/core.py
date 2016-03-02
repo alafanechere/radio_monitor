@@ -31,14 +31,29 @@ class Collector():
 
 class Metadata():
 
-    def __init__(self, title, artist, broadcaster, broadcast_time):
+    def __init__(self, title, artist, broadcaster, broadcast_time, album=None, year=None, label=None):
         self.title = title
         self.artist = artist
+        self.album = album
+        self.year = year
+        self.label = label
         self.broadcaster = broadcaster
         self.broadcast_time = broadcast_time
 
     def __str__(self):
-        return "Title: {}, Artist: {}, broadcast_time: {}".format(self.title, self.artist, self.broadcast_time)
+        return "Title: {}\n" \
+               "Artist: {}\n" \
+               "Album: {}\n" \
+               "Label: {}\n" \
+               "Year: {}\n" \
+               "Broadcast_time: {}\n" \
+               "Broadcaster: {}".format(self.title,
+                                        self.artist,
+                                        self.album,
+                                        self.label,
+                                        self.year,
+                                        self.broadcast_time,
+                                        self.broadcaster)
 
 
 class FipCollector(Collector):
@@ -51,13 +66,16 @@ class FipCollector(Collector):
     def parse_request(self, json_dump, current_time):
         metadata = None
 
-        for key, value in json_dump['steps'].iteritems():
-            value['start'] = datetime.datetime.fromtimestamp(value['start'])
-            value['end'] = datetime.datetime.fromtimestamp(value['end'])
+        for _, track in json_dump['steps'].iteritems():
+            track['start'] = datetime.datetime.fromtimestamp(track['start'])
+            track['end'] = datetime.datetime.fromtimestamp(track['end'])
 
-            if 'title' in value and 'authors' in value and value['start'] < current_time < value['end']:
-                title = value['title'].lower()
-                artist = value['authors'].lower()
-                metadata = Metadata(title, artist, self.RADIO_NAME, current_time)
+            if 'title' in track and 'authors' in track and track['start'] < current_time < track['end']:
+                title = track['title'].lower()
+                artist = track['authors'].lower()
+                album = track['titreAlbum'].lower()
+                label = track['label'].lower()
+                year = track['anneeEditionMusique']
+                metadata = Metadata(title, artist, self.RADIO_NAME, current_time, album=album, label=label, year=year)
                 break
         return metadata
