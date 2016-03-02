@@ -38,11 +38,20 @@ class Collector():
 class Metadata():
 
     def __init__(self, title, artist, broadcaster, broadcast_time, album=None, year=None, label=None):
-        self.title = title
-        self.artist = artist
-        self.album = album
+        self.title = title.strip().lower()
+        self.artist = artist.strip().lower()
+
+        if album is not None:
+            self.album = album.strip().lower()
+        else:
+            self.album = album
+            
+        if label is not None:
+            self.label = label.strip().lower()
+        else:
+            self.label = label
+
         self.year = year
-        self.label = label
         self.broadcaster = broadcaster
         self.broadcast_time = broadcast_time
 
@@ -77,10 +86,10 @@ class FipCollector(Collector):
             track['end'] = datetime.datetime.fromtimestamp(track['end'])
 
             if 'title' in track and 'authors' in track and track['start'] < current_time < track['end']:
-                title = track['title'].lower()
-                artist = track['authors'].lower()
-                album = track['titreAlbum'].lower()
-                label = track['label'].lower()
+                title = track['title']
+                artist = track['authors']
+                album = track['titreAlbum']
+                label = track['label']
                 year = track['anneeEditionMusique']
                 metadata = Metadata(title, artist, self.RADIO_NAME, current_time, album=album, label=label, year=year)
                 break
@@ -100,8 +109,8 @@ class NovaCollector(Collector):
         track = json_dump['track']
         if len(track['id']) > 0:
             soup = BeautifulSoup(track['markup'])
-            artist = soup.find("div", class_="artist").getText().strip().lower()
-            title = soup.find("div", class_="title").getText().strip().lower()
+            artist = soup.find("div", class_="artist").getText()
+            title = soup.find("div", class_="title").getText()
             metadata = Metadata(title, artist, self.RADIO_NAME, current_time)
 
         return metadata
@@ -116,8 +125,8 @@ class FunRadioCollector(Collector):
 
     def parse_response(self, html_dump, current_time):
         soup = BeautifulSoup(html_dump)
-        title = soup.find("h2", class_="song-title").getText().strip().lower()
-        artist = soup.find("p", class_="song-artist").getText().strip().lower()
+        title = soup.find("h2", class_="song-title").getText()
+        artist = soup.find("p", class_="song-artist").getText()
         metadata = Metadata(title, artist, self.RADIO_NAME, current_time)
 
         return metadata
