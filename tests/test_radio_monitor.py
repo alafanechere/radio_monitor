@@ -55,3 +55,17 @@ def test_metadata_nrj():
         assert current_metadata.year is None
         assert isinstance(current_metadata.broadcaster, str)
         assert isinstance(current_metadata.broadcast_time, datetime.datetime)
+
+
+def test_metadata_skyrock():
+    skyrock_collector = core.SkyrockCollector()
+    current_metadata = skyrock_collector.get_current_metadata()
+
+    if current_metadata is not None:
+        assert isinstance(current_metadata.title, unicode)
+        assert isinstance(current_metadata.artist, unicode)
+        assert current_metadata.album is None
+        assert current_metadata.label is None
+        assert current_metadata.year is None
+        assert isinstance(current_metadata.broadcaster, str)
+        assert isinstance(current_metadata.broadcast_time, datetime.datetime)
