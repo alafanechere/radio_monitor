@@ -37,6 +37,9 @@ class Metadata():
         self.broadcaster = broadcaster
         self.broadcast_time = broadcast_time
 
+    def __str__(self):
+        return "Title: {}, Artist: {}, broadcast_time: {}".format(self.title, self.artist, self.broadcast_time)
+
 
 class FipCollector(Collector):
     RADIO_NAME = "FIP"
