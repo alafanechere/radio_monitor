@@ -20,14 +20,14 @@ class Collector():
         except requests.HTTPError, e:
             raise e
 
-    def parse_request(self, json_dump, current_time):
+    def parse_response(self, json_dump, current_time):
         # should return a dict of metadata
         raise NotImplementedError
 
     def get_current_metadata(self):
         json_response = self.make_request()
         current_time = datetime.datetime.now()
-        return self.parse_request(json_response, current_time)
+        return self.parse_response(json_response, current_time)
 
 
 class Metadata():
@@ -64,7 +64,7 @@ class FipCollector(Collector):
     def __init__(self, crawl_frequency=1):
         Collector.__init__(self, crawl_frequency)
 
-    def parse_request(self, json_dump, current_time):
+    def parse_response(self, json_dump, current_time):
         metadata = None
 
         for _, track in json_dump['steps'].iteritems():
@@ -90,7 +90,7 @@ class NovaCollector(Collector):
     def __init__(self, crawl_frequency=1):
         Collector.__init__(self, crawl_frequency)
 
-    def parse_request(self, json_dump, current_time):
+    def parse_response(self, json_dump, current_time):
         metadata = None
         track = json_dump['track']
         if len(track['id']) > 0:
