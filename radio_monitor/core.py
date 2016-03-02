@@ -45,7 +45,7 @@ class Metadata():
             self.album = album.strip().lower()
         else:
             self.album = album
-            
+
         if label is not None:
             self.label = label.strip().lower()
         else:
@@ -141,4 +141,8 @@ class NrjCollector(Collector):
 
     def parse_response(self, json_dump, current_time):
         track = json_dump["itms"][0]
-        return Metadata(track['tit'], track['art'], self.RADIO_NAME, current_time)
+        if len(track['itn']) > 0 :
+            return Metadata(track['tit'], track['art'], self.RADIO_NAME, current_time)
+        else:
+            return None
+
