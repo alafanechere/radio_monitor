@@ -6,5 +6,10 @@ def main():
     meta = fip_collector.get_current_metadata()
     print meta
 
+    print "------------"
+    nova_collector = core.NovaCollector(1)
+    meta = nova_collector.get_current_metadata()
+    print meta
+
 if __name__ == '__main__':
     main()

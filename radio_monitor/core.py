@@ -1,3 +1,4 @@
+from bs4 import BeautifulSoup
 import datetime
 import requests
 
@@ -78,4 +79,24 @@ class FipCollector(Collector):
                 year = track['anneeEditionMusique']
                 metadata = Metadata(title, artist, self.RADIO_NAME, current_time, album=album, label=label, year=year)
                 break
+
+        return metadata
+
+
+class NovaCollector(Collector):
+    RADIO_NAME = "Nova"
+    _API_ENDPOINT = "http://www.novaplanet.com/radionova/ontheair"
+
+    def __init__(self, crawl_frequency=1):
+        Collector.__init__(self, crawl_frequency)
+
+    def parse_request(self, json_dump, current_time):
+        metadata = None
+        track = json_dump['track']
+        if len(track['id']) > 0:
+            soup = BeautifulSoup(track['markup'])
+            artist = soup.find("div", class_="artist").getText().strip().lower()
+            title = soup.find("div", class_="title").getText().strip().lower()
+            metadata = Metadata(title, artist, self.RADIO_NAME, current_time)
+
         return metadata
