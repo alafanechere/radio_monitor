@@ -16,7 +16,12 @@ class Collector():
     def make_request(self):
         try:
             response = requests.get(self._API_ENDPOINT)
-            return response.json()
+
+            try:
+                return response.json()
+            except ValueError:
+                return response.text
+
         except requests.HTTPError, e:
             raise e
 
