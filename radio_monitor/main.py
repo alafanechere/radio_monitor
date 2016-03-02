@@ -1,28 +1,28 @@
-import core
+import collectors
 
 
 def main():
-    fip_collector = core.FipCollector(1)
+    fip_collector = collectors.FipCollector(1)
     meta = fip_collector.get_current_metadata()
     print meta
 
     print "------------"
-    nova_collector = core.NovaCollector(1)
+    nova_collector = collectors.NovaCollector(1)
     meta = nova_collector.get_current_metadata()
     print meta
 
     print "------------"
-    fun_radio_collector = core.FunRadioCollector()
+    fun_radio_collector = collectors.FunRadioCollector()
     meta = fun_radio_collector.get_current_metadata()
     print meta
 
     print "------------"
-    nrj_collector = core.NrjCollector()
+    nrj_collector = collectors.NrjCollector()
     meta = nrj_collector.get_current_metadata()
     print meta
 
     print "------------"
-    skyrock_collector = core.SkyrockCollector()
+    skyrock_collector = collectors.SkyrockCollector()
     meta = skyrock_collector.get_current_metadata()
     print meta
 

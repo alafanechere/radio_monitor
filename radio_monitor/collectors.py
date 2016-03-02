@@ -34,58 +34,6 @@ class Collector():
         current_time = datetime.datetime.now()
         return self.parse_response(json_response, current_time)
 
-
-class Metadata():
-
-    def __init__(self, title, artist, broadcaster, broadcast_time, album=None, year=None, label=None):
-        self.title = title.strip().lower()
-        self.artist = artist.strip().lower()
-
-        if album is not None:
-            self.album = album.strip().lower()
-        else:
-            self.album = album
-
-        if label is not None:
-            self.label = label.strip().lower()
-        else:
-            self.label = label
-
-        self.year = year
-        self.broadcaster = broadcaster
-        self.broadcast_time = broadcast_time
-
-    def __str__(self):
-        try:
-            return "Title: {}\n" \
-                   "Artist: {}\n" \
-                   "Album: {}\n" \
-                   "Label: {}\n" \
-                   "Year: {}\n" \
-                   "Broadcast_time: {}\n" \
-                   "Broadcaster: {}".format(self.title.encode('ascii', 'ignore'),
-                                            self.artist.encode('ascii', 'ignore'),
-                                            self.album,
-                                            self.label,
-                                            self.year,
-                                            self.broadcast_time,
-                                            self.broadcaster)
-        except UnicodeEncodeError:
-            return "Title: {}\n" \
-                   "Artist: {}\n" \
-                   "Album: {}\n" \
-                   "Label: {}\n" \
-                   "Year: {}\n" \
-                   "Broadcast_time: {}\n" \
-                   "Broadcaster: {}".format(self.title.encode('ascii', 'ignore'),
-                                            self.artist.encode('ascii', 'ignore'),
-                                            self.album.encode('ascii', 'ignore'),
-                                            self.label.encode('ascii', 'ignore'),
-                                            self.year,
-                                            self.broadcast_time,
-                                            self.broadcaster)
-
-
 class FipCollector(Collector):
     RADIO_NAME = "FIP"
     _API_ENDPOINT = "http://www.fipradio.fr/livemeta/7"
@@ -103,9 +51,21 @@ class FipCollector(Collector):
             if 'title' in track and 'authors' in track and track['start'] < current_time < track['end']:
                 title = track['title']
                 artist = track['authors']
-                album = track['titreAlbum']
-                label = track['label']
-                year = track['anneeEditionMusique']
+                if 'titreAlbum' in track:
+                    album = track['titreAlbum']
+                else:
+                    album = None
+
+                if 'label' in track:
+                    label = track['label']
+                else:
+                    label = None
+
+                if 'anneeEditionMusique' in track:
+                    year = track['anneeEditionMusique']
+                else:
+                    label = None
+
                 metadata = Metadata(title, artist, self.RADIO_NAME, current_time, album=album, label=label, year=year)
                 break
 

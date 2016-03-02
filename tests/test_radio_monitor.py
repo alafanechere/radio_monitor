@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 import datetime
 import pytest
-from radio_monitor import core
+from radio_monitor import collectors
 
 
 def test_metadata_fip():
-    fip_collector = core.FipCollector(1)
+    fip_collector = collectors.FipCollector(1)
     current_metadata = fip_collector.get_current_metadata()
 
     assert isinstance(current_metadata.title, unicode)
@@ -18,7 +18,7 @@ def test_metadata_fip():
 
 
 def test_metadata_nova():
-    nova_collector = core.NovaCollector(1)
+    nova_collector = collectors.NovaCollector(1)
     current_metadata = nova_collector.get_current_metadata()
     if current_metadata is not None:
         assert isinstance(current_metadata.title, unicode)
@@ -31,7 +31,7 @@ def test_metadata_nova():
 
 
 def test_metadata_fun():
-    fun_collector = core.FunRadioCollector()
+    fun_collector = collectors.FunRadioCollector()
     current_metadata = fun_collector.get_current_metadata()
 
     assert isinstance(current_metadata.title, unicode)
@@ -44,7 +44,7 @@ def test_metadata_fun():
 
 
 def test_metadata_nrj():
-    nrj_collector = core.NrjCollector()
+    nrj_collector = collectors.NrjCollector()
     current_metadata = nrj_collector.get_current_metadata()
 
     if current_metadata is not None:
@@ -58,7 +58,7 @@ def test_metadata_nrj():
 
 
 def test_metadata_skyrock():
-    skyrock_collector = core.SkyrockCollector()
+    skyrock_collector = collectors.SkyrockCollector()
     current_metadata = skyrock_collector.get_current_metadata()
 
     if current_metadata is not None:
