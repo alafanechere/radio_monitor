@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import datetime
+import models
 import requests
 
 
@@ -34,6 +35,7 @@ class Collector():
         current_time = datetime.datetime.now()
         return self.parse_response(json_response, current_time)
 
+
 class FipCollector(Collector):
     RADIO_NAME = "FIP"
     _API_ENDPOINT = "http://www.fipradio.fr/livemeta/7"
@@ -66,7 +68,7 @@ class FipCollector(Collector):
                 else:
                     label = None
 
-                metadata = Metadata(title, artist, self.RADIO_NAME, current_time, album=album, label=label, year=year)
+                metadata = models.Metadata(title, artist, self.RADIO_NAME, current_time, album=album, label=label, year=year)
                 break
 
         return metadata
@@ -86,7 +88,7 @@ class NovaCollector(Collector):
             soup = BeautifulSoup(track['markup'])
             artist = soup.find("div", class_="artist").getText()
             title = soup.find("div", class_="title").getText()
-            metadata = Metadata(title, artist, self.RADIO_NAME, current_time)
+            metadata = models.Metadata(title, artist, self.RADIO_NAME, current_time)
 
         return metadata
 
@@ -102,7 +104,7 @@ class FunRadioCollector(Collector):
         soup = BeautifulSoup(html_dump)
         title = soup.find("h2", class_="song-title").getText()
         artist = soup.find("p", class_="song-artist").getText()
-        metadata = Metadata(title, artist, self.RADIO_NAME, current_time)
+        metadata = models.Metadata(title, artist, self.RADIO_NAME, current_time)
 
         return metadata
 
@@ -117,7 +119,7 @@ class NrjCollector(Collector):
     def parse_response(self, json_dump, current_time):
         track = json_dump["itms"][0]
         if len(track['itn']) > 0 :
-            return Metadata(track['tit'], track['art'], self.RADIO_NAME, current_time)
+            return models.Metadata(track['tit'], track['art'], self.RADIO_NAME, current_time)
         else:
             return None
 
@@ -135,6 +137,6 @@ class SkyrockCollector(Collector):
         track['info']['end_ts'] = datetime.datetime.fromtimestamp(float(track['info']['end_ts']))
 
         if track['info']['start_ts'] < current_time < track['info']['end_ts']:
-            return Metadata(track['info']['title'], track['artists'][0]['name'], self.RADIO_NAME, current_time)
+            return models.Metadata(track['info']['title'], track['artists'][0]['name'], self.RADIO_NAME, current_time)
         else:
             return None
