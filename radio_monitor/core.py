@@ -121,3 +121,15 @@ class FunRadioCollector(Collector):
         metadata = Metadata(title, artist, self.RADIO_NAME, current_time)
 
         return metadata
+
+
+class NrjCollector(Collector):
+    RADIO_NAME = "NRJ"
+    _API_ENDPOINT = "http://players.nrjaudio.fm/wr_api/live/fr?id_wr=158&cp=UTF8&fmt=json&act=get_cur"
+
+    def __init__(self, crawl_frequency=1):
+        Collector.__init__(self, crawl_frequency)
+
+    def parse_response(self, json_dump, current_time):
+        track = json_dump["itms"][0]
+        return Metadata(track['tit'], track['art'], self.RADIO_NAME, current_time)

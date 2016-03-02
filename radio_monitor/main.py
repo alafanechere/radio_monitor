@@ -16,5 +16,10 @@ def main():
     meta = fun_radio_collector.get_current_metadata()
     print meta
 
+    print "------------"
+    nrj_collector = core.NrjCollector()
+    meta = nrj_collector.get_current_metadata()
+    print meta
+
 if __name__ == '__main__':
     main()
