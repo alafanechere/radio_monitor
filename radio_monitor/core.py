@@ -49,10 +49,12 @@ class FipCollector(Collector):
         metadata = None
 
         for key, value in json_dump['steps'].iteritems():
-            if value['start'] < current_time < value['stop']:
+            value['start'] = datetime.datetime.fromtimestamp(value['start'])
+            value['end'] = datetime.datetime.fromtimestamp(value['end'])
+
+            if 'title' in value and 'authors' in value and value['start'] < current_time < value['end']:
                 title = value['title']
                 artist = value['authors']
                 metadata = Metadata(title, artist, self.RADIO_NAME, current_time)
                 break
-
         return metadata
