@@ -1,1 +1,4 @@
 .idea
+*.pyc
+Radio_Monitor.egg-info
+.cache
