@@ -20,6 +20,16 @@ def test_metadata_fip():
 def test_metadata_nova():
     nova_collector = core.NovaCollector(1)
     current_metadata = nova_collector.get_current_metadata()
+    if current_metadata is not None:
+        assert isinstance(current_metadata.title, unicode)
+        assert isinstance(current_metadata.artist, unicode)
+        assert current_metadata.album is None
+        assert current_metadata.label is None
+        assert current_metadata.year is None
+        assert isinstance(current_metadata.broadcaster, str)
+        assert isinstance(current_metadata.broadcast_time, datetime.datetime)
+
+
 
     assert isinstance(current_metadata.title, unicode)
     assert isinstance(current_metadata.artist, unicode)
