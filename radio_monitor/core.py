@@ -53,8 +53,8 @@ class Metadata():
                "Label: {}\n" \
                "Year: {}\n" \
                "Broadcast_time: {}\n" \
-               "Broadcaster: {}".format(self.title,
-                                        self.artist,
+               "Broadcaster: {}".format(self.title.encode('ascii', 'ignore'),
+                                        self.artist.encode('ascii', 'ignore'),
                                         self.album,
                                         self.label,
                                         self.year,
