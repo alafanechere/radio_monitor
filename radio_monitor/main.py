@@ -16,7 +16,8 @@ class Pinger(threading.Thread):
             print self.collector.RADIO_NAME
             print meta
             print "--------"
-            time.sleep(self.collector.crawl_frequency * 60)
+            time.sleep(self.collector.crawl_frequency)
+
 
     def stop(self):
         self._stop.set()

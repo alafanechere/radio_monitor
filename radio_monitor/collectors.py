@@ -11,7 +11,7 @@ class Collector():
     RADIO_NAME = NotImplemented
     _API_ENDPOINT = NotImplemented
 
-    def __init__(self, crawl_frequency=1):
+    def __init__(self, crawl_frequency=30):
         self.crawl_frequency = crawl_frequency
 
     def make_request(self):
@@ -40,7 +40,7 @@ class FipCollector(Collector):
     RADIO_NAME = "FIP"
     _API_ENDPOINT = "http://www.fipradio.fr/livemeta/7"
 
-    def __init__(self, crawl_frequency=1):
+    def __init__(self, crawl_frequency=30):
         Collector.__init__(self, crawl_frequency)
 
     def parse_response(self, json_dump, current_time):
@@ -78,7 +78,7 @@ class NovaCollector(Collector):
     RADIO_NAME = "Nova"
     _API_ENDPOINT = "http://www.novaplanet.com/radionova/ontheair"
 
-    def __init__(self, crawl_frequency=1):
+    def __init__(self, crawl_frequency=30):
         Collector.__init__(self, crawl_frequency)
 
     def parse_response(self, json_dump, current_time):
@@ -97,7 +97,7 @@ class FunRadioCollector(Collector):
     RADIO_NAME = "FunRadio"
     _API_ENDPOINT = "http://www.funradio.fr/direct/timeline"
 
-    def __init__(self, crawl_frequency=1):
+    def __init__(self, crawl_frequency=30):
         Collector.__init__(self, crawl_frequency)
 
     def parse_response(self, html_dump, current_time):
@@ -113,7 +113,7 @@ class NrjCollector(Collector):
     RADIO_NAME = "NRJ"
     _API_ENDPOINT = "http://players.nrjaudio.fm/wr_api/live/fr?id_wr=158&cp=UTF8&fmt=json&act=get_cur"
 
-    def __init__(self, crawl_frequency=1):
+    def __init__(self, crawl_frequency=30):
         Collector.__init__(self, crawl_frequency)
 
     def parse_response(self, json_dump, current_time):
@@ -128,7 +128,7 @@ class SkyrockCollector(Collector):
     RADIO_NAME = "Skyrock"
     _API_ENDPOINT = "http://skyrock.fm/api/v3/player/onair'"
 
-    def __init__(self, crawl_frequency=1):
+    def __init__(self, crawl_frequency=30):
         Collector.__init__(self, crawl_frequency)
 
     def parse_response(self, json_dump, current_time):
