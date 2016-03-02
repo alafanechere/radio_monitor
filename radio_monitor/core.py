@@ -161,3 +161,20 @@ class NrjCollector(Collector):
         else:
             return None
 
+
+class SkyrockCollector(Collector):
+    RADIO_NAME = "Skyrock"
+    _API_ENDPOINT = "http://skyrock.fm/api/v3/player/onair'"
+
+    def __init__(self, crawl_frequency=1):
+        Collector.__init__(self, crawl_frequency)
+
+    def parse_response(self, json_dump, current_time):
+        track = json_dump["schedule"][-1]
+        track['info']['start_ts'] = datetime.datetime.fromtimestamp(float(track['info']['start_ts']))
+        track['info']['end_ts'] = datetime.datetime.fromtimestamp(float(track['info']['end_ts']))
+
+        if track['info']['start_ts'] < current_time < track['info']['end_ts']:
+            return Metadata(track['info']['title'], track['artists'][0]['name'], self.RADIO_NAME, current_time)
+        else:
+            return None

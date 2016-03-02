@@ -21,5 +21,10 @@ def main():
     meta = nrj_collector.get_current_metadata()
     print meta
 
+    print "------------"
+    skyrock_collector = core.SkyrockCollector()
+    meta = skyrock_collector.get_current_metadata()
+    print meta
+
 if __name__ == '__main__':
     main()
