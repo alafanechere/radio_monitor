@@ -105,3 +105,19 @@ class NovaCollector(Collector):
             metadata = Metadata(title, artist, self.RADIO_NAME, current_time)
 
         return metadata
+
+
+class FunRadioCollector(Collector):
+    RADIO_NAME = "FunRadio"
+    _API_ENDPOINT = "http://www.funradio.fr/direct/timeline"
+
+    def __init__(self, crawl_frequency=1):
+        Collector.__init__(self, crawl_frequency)
+
+    def parse_response(self, html_dump, current_time):
+        soup = BeautifulSoup(html_dump)
+        title = soup.find("h2", class_="song-title").getText().strip().lower()
+        artist = soup.find("p", class_="song-artist").getText().strip().lower()
+        metadata = Metadata(title, artist, self.RADIO_NAME, current_time)
+
+        return metadata

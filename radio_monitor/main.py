@@ -11,5 +11,10 @@ def main():
     meta = nova_collector.get_current_metadata()
     print meta
 
+    print "------------"
+    fun_radio_collector = core.FunRadioCollector()
+    meta = fun_radio_collector.get_current_metadata()
+    print meta
+
 if __name__ == '__main__':
     main()
