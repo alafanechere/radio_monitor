@@ -30,6 +30,9 @@ def test_metadata_nova():
         assert isinstance(current_metadata.broadcast_time, datetime.datetime)
 
 
+def test_metadata_fun():
+    fun_collector = core.FunRadioCollector()
+    current_metadata = fun_collector.get_current_metadata()
 
     assert isinstance(current_metadata.title, unicode)
     assert isinstance(current_metadata.artist, unicode)
@@ -38,4 +41,3 @@ def test_metadata_nova():
     assert current_metadata.year is None
     assert isinstance(current_metadata.broadcaster, str)
     assert isinstance(current_metadata.broadcast_time, datetime.datetime)
-
