@@ -1,4 +1,3 @@
-import collectors
 import time
 import threading
 
@@ -31,44 +30,50 @@ class Pinger(threading.Thread):
         return self._stop.isSet()
 
 
-def main():
-    threads = {"FIP": Pinger(collectors.FipCollector()),
-               "Nova": Pinger(collectors.NovaCollector()),
-               "NRJ": Pinger(collectors.NrjCollector()),
-               "Fun Radio": Pinger(collectors.FunRadioCollector()),
-               "Skyrock": Pinger(collectors.SkyrockCollector())}
+class Telex(threading.Thread):
 
-    for _, radio_thread in threads.iteritems():
-        radio_thread.start()
+    def __init__(self, pingers_to_monitor):
+        super(Telex, self).__init__()
+        self.pingers = pingers_to_monitor
+        self._stop = threading.Event()
 
-    time.sleep(2)
+    def run(self):
 
-    current_metas = {}
+        for _, radio_thread in self.pingers.iteritems():
+            radio_thread.start()
 
-    for radio, pinger in threads.iteritems():
-        current_metas[radio] = pinger.current_meta
+        time.sleep(2)
 
-    for radio, meta in current_metas.iteritems():
-        print radio
-        print meta
+        current_metas = {}
 
-    on = True
-    while on:
-        try:
-            time.sleep(1)
-            for radio, meta in current_metas.iteritems():
-                if meta != threads[radio].current_meta:
-                    current_metas[radio] = threads[radio].current_meta
-                    print current_metas[radio]
-                    print "\n\n"
-        except KeyboardInterrupt:
-            on = False
+        for radio, pinger in self.pingers.iteritems():
+            current_metas[radio] = pinger.current_meta
 
-    for _, thread in threads.iteritems():
-        thread.stop()
+        for radio, meta in current_metas.iteritems():
+            print radio
+            print meta
 
-    for _, thread in threads.iteritems():
-        thread.join()
+        on = True
+        while on:
+            try:
+                time.sleep(1)
+                for radio, meta in current_metas.iteritems():
+                    if meta != self.pingers[radio].current_meta:
+                        current_metas[radio] = self.pingers[radio].current_meta
+                        print current_metas[radio]
+                        print "\n\n"
 
-if __name__ == '__main__':
-    main()
+            except KeyboardInterrupt:
+                on = False
+
+        for _, thread in self.pingers.iteritems():
+            thread.stop()
+
+        for _, thread in self.pingers.iteritems():
+            thread.join()
+
+    def stop(self):
+        self._stop.set()
+
+    def stopped(self):
+        return self._stop.isSet()
