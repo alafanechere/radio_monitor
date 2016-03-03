@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import datetime
-import pytest
 from radio_monitor import collectors, threads
 import time
+
 
 def test_metadata_fip():
     fip_collector = collectors.FipCollector()
@@ -81,3 +81,21 @@ def test_pinger():
     fip_pinger.stop()
     time.sleep(5)
     assert fip_pinger.stopped() is True
+    fip_pinger.join()
+
+
+def test_telex():
+    pingers = {"FIP": collectors.FipCollector(),
+               "Fun Radio": collectors.FunRadioCollector(),
+               "Nova": collectors.NovaCollector(),
+               "NRJ": collectors.NrjCollector(),
+               "Skyrock": collectors.SkyrockCollector()}
+
+    telex = threads.Telex(pingers)
+
+    telex.start()
+    assert telex.stopped() is False
+    time.sleep(5)
+    telex.stop()
+    assert telex.stopped() is True
+    telex.join()
