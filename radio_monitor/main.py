@@ -11,13 +11,20 @@ class Pinger(threading.Thread):
         self._stop = threading.Event()
 
     def run(self):
+        current_meta = None
         while self.stopped() is False:
             meta = self.collector.get_current_metadata()
-            print self.collector.RADIO_NAME
-            print meta
-            print "--------"
-            time.sleep(self.collector.crawl_frequency)
 
+            try:
+                if current_meta is None or (current_meta.title != meta.title and current_meta.artist != meta.artist):
+                    current_meta = meta
+                    print self.collector.RADIO_NAME
+                    print meta
+                    print "--------"
+            except AttributeError:
+                current_meta = None
+
+            time.sleep(self.collector.crawl_frequency)
 
     def stop(self):
         self._stop.set()
