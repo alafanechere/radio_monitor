@@ -30,6 +30,7 @@ class Pinger(threading.Thread):
     def stopped(self):
         return self._stop.isSet()
 
+
 def main():
     threads = {"FIP": Pinger(collectors.FipCollector()),
                "Nova": Pinger(collectors.NovaCollector()),
