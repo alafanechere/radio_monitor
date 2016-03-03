@@ -10,6 +10,9 @@ import requests
 class Collector():
     RADIO_NAME = NotImplemented
     _API_ENDPOINT = NotImplemented
+    _HTTP_HEADERS = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) '
+                                   'AppleWebKit/537.36 (KHTML, like Gecko) '
+                                   'Chrome/48.0.2564.116 Safari/537.36'}
 
     def __init__(self, crawl_frequency=10):
         self.crawl_frequency = crawl_frequency
