@@ -53,18 +53,13 @@ class Telex(threading.Thread):
             print radio
             print meta
 
-        on = True
-        while on:
-            try:
-                time.sleep(1)
-                for radio, meta in current_metas.iteritems():
-                    if meta != self.pingers[radio].current_meta:
-                        current_metas[radio] = self.pingers[radio].current_meta
-                        print current_metas[radio]
-                        print "\n\n"
-
-            except KeyboardInterrupt:
-                on = False
+        while self.stopped() is False:
+            time.sleep(1)
+            for radio, meta in current_metas.iteritems():
+                if meta != self.pingers[radio].current_meta:
+                    current_metas[radio] = self.pingers[radio].current_meta
+                    print current_metas[radio]
+                    print "\n\n"
 
         for _, thread in self.pingers.iteritems():
             thread.stop()

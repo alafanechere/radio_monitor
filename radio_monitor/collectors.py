@@ -126,7 +126,7 @@ class NrjCollector(Collector):
 
     def parse_response(self, json_dump, current_time):
         track = json_dump["itms"][0]
-        if len(track['itn']) > 0 :
+        if len(track['itn']) > 0:
             return models.Metadata(track['tit'], track['art'], self.RADIO_NAME, current_time)
         else:
             return None
