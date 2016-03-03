@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 import datetime
 import pytest
-from radio_monitor import collectors
-
+from radio_monitor import collectors, threads
+import time
 
 def test_metadata_fip():
-    fip_collector = collectors.FipCollector(1)
+    fip_collector = collectors.FipCollector()
     current_metadata = fip_collector.get_current_metadata()
 
     assert isinstance(current_metadata.title, unicode)
@@ -18,7 +18,7 @@ def test_metadata_fip():
 
 
 def test_metadata_nova():
-    nova_collector = collectors.NovaCollector(1)
+    nova_collector = collectors.NovaCollector()
     current_metadata = nova_collector.get_current_metadata()
     if current_metadata is not None:
         assert isinstance(current_metadata.title, unicode)
@@ -69,3 +69,15 @@ def test_metadata_skyrock():
         assert current_metadata.year is None
         assert isinstance(current_metadata.broadcaster, str)
         assert isinstance(current_metadata.broadcast_time, datetime.datetime)
+
+
+def test_pinger():
+    fip_collector = collectors.FipCollector()
+    fip_pinger = threads.Pinger(fip_collector)
+    fip_pinger.start()
+    assert fip_pinger.stopped() is False
+    time.sleep(5)
+    assert fip_pinger.current_meta is not None
+    fip_pinger.stop()
+    time.sleep(5)
+    assert fip_pinger.stopped() is True
