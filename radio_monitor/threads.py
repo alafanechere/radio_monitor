@@ -10,6 +10,7 @@ class Pinger(threading.Thread):
         super(Pinger, self).__init__()
         self.collector = collector
         self.current_meta = None
+        self.new_meta = False
         self._stop = threading.Event()
 
     def run(self):
@@ -20,8 +21,14 @@ class Pinger(threading.Thread):
                 if self.current_meta is None or (self.current_meta.title != meta.title
                                                  and self.current_meta.artist != meta.artist):
                     self.current_meta = meta
+                    if self.current_meta is not None:
+                        self.new_meta = True
+                    else:
+                        self.new_meta = False
+
             except AttributeError:
                 self.current_meta = None
+                self.new_meta = False
 
             time.sleep(self.collector.crawl_frequency)
 
@@ -44,32 +51,28 @@ class Telex(threading.Thread):
 
     def run(self):
 
-        for _, radio_thread in self.pingers.iteritems():
-            radio_thread.start()
+        for pinger in self.pingers:
+            pinger.start()
 
         time.sleep(2)
 
-        current_metas = {}
-
-        for radio, pinger in self.pingers.iteritems():
-            current_metas[radio] = pinger.current_meta
-
-        for _, meta in current_metas.iteritems():
-            self.logger.info(str(meta))
+        self.check_new_track()
 
         while self.stopped() is False:
             time.sleep(1)
-            for radio, meta in current_metas.iteritems():
-                if meta != self.pingers[radio].current_meta:
-                    current_metas[radio] = self.pingers[radio].current_meta
-                    if meta is not None:
-                        self.logger.info(str(meta))
+            self.check_new_track()
 
         for _, thread in self.pingers.iteritems():
             thread.stop()
 
         for _, thread in self.pingers.iteritems():
             thread.join()
+
+    def check_new_track(self):
+        for pinger in self.pingers:
+            if pinger.new_meta:
+                self.logger.info(str(pinger.current_meta))
+                pinger.new_meta = False
 
     def stop(self):
         self._stop.set()

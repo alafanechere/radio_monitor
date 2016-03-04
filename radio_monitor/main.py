@@ -3,19 +3,21 @@ import threads
 
 
 def main():
-    pingers = {"FIP": threads.Pinger(collectors.FipCollector()),
-               "FunRadio": threads.Pinger(collectors.FunRadioCollector()),
-               "Nova": threads.Pinger(collectors.NovaCollector()),
-               "NRJ": threads.Pinger(collectors.NrjCollector()),
-               "Skyrock": threads.Pinger(collectors.SkyrockCollector())}
+    pingers = [threads.Pinger(collectors.FipCollector()),
+               threads.Pinger(collectors.FunRadioCollector()),
+               threads.Pinger(collectors.NovaCollector()),
+               threads.Pinger(collectors.NrjCollector()),
+               threads.Pinger(collectors.SkyrockCollector())]
 
     telex = threads.Telex(pingers)
     telex.start()
+
     while True:
         try:
             pass
         except KeyboardInterrupt:
             telex.stop()
+            break
 
 if __name__ == '__main__':
     main()
