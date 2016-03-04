@@ -1,3 +1,5 @@
+import log
+import logging
 import time
 import threading
 
@@ -32,6 +34,9 @@ class Pinger(threading.Thread):
 
 class Telex(threading.Thread):
 
+    telex_logger = log.setup_telex_logger('telex')
+    logger = logging.getLogger('telex')
+
     def __init__(self, pingers_to_monitor):
         super(Telex, self).__init__()
         self.pingers = pingers_to_monitor
@@ -49,17 +54,16 @@ class Telex(threading.Thread):
         for radio, pinger in self.pingers.iteritems():
             current_metas[radio] = pinger.current_meta
 
-        for radio, meta in current_metas.iteritems():
-            print radio
-            print meta
+        for _, meta in current_metas.iteritems():
+            self.logger.info(str(meta))
 
         while self.stopped() is False:
             time.sleep(1)
             for radio, meta in current_metas.iteritems():
                 if meta != self.pingers[radio].current_meta:
                     current_metas[radio] = self.pingers[radio].current_meta
-                    print current_metas[radio]
-                    print "\n\n"
+                    if meta is not None:
+                        self.logger.info(str(meta))
 
         for _, thread in self.pingers.iteritems():
             thread.stop()
