@@ -12,12 +12,12 @@ def main():
     telex = threads.Telex(pingers)
     telex.start()
 
-    while True:
-        try:
+    try:
+        while True:
             pass
-        except KeyboardInterrupt:
-            telex.stop()
-            break
+    except KeyboardInterrupt:
+        telex.stop = True
+
 
 if __name__ == '__main__':
     main()

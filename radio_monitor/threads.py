@@ -11,10 +11,11 @@ class Pinger(threading.Thread):
         self.collector = collector
         self.current_meta = None
         self.new_meta = False
-        self._stop = threading.Event()
+        self.daemon = True
+        self.stop = False
 
     def run(self):
-        while self.stopped() is False:
+        while self.stop is False:
             meta = self.collector.get_current_metadata()
 
             try:
@@ -32,12 +33,6 @@ class Pinger(threading.Thread):
 
             time.sleep(self.collector.crawl_frequency)
 
-    def stop(self):
-        self._stop.set()
-
-    def stopped(self):
-        return self._stop.isSet()
-
 
 class Telex(threading.Thread):
 
@@ -47,7 +42,8 @@ class Telex(threading.Thread):
     def __init__(self, pingers_to_monitor):
         super(Telex, self).__init__()
         self.pingers = pingers_to_monitor
-        self._stop = threading.Event()
+        self.daemon = True
+        self.stop = False
 
     def run(self):
 
@@ -58,24 +54,15 @@ class Telex(threading.Thread):
 
         self.check_new_track()
 
-        while self.stopped() is False:
+        while self.stop is False:
             time.sleep(1)
             self.check_new_track()
 
-        for _, thread in self.pingers.iteritems():
-            thread.stop()
-
-        for _, thread in self.pingers.iteritems():
-            thread.join()
+        for pinger in self.pingers:
+            pinger.stop = True
 
     def check_new_track(self):
         for pinger in self.pingers:
             if pinger.new_meta:
                 self.logger.info(str(pinger.current_meta))
                 pinger.new_meta = False
-
-    def stop(self):
-        self._stop.set()
-
-    def stopped(self):
-        return self._stop.isSet()
