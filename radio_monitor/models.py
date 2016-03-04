@@ -18,8 +18,7 @@ class Metadata():
         self.broadcaster = broadcaster
         self.broadcast_time = broadcast_time
 
-    def __str__(self):
-        try:
+    def __unicode__(self):
             return "{} - {} \n" \
                    "Title: {}\n" \
                    "Artist: {}\n" \
@@ -27,21 +26,8 @@ class Metadata():
                    "Label: {}\n" \
                    "Year: {}\n".format(self.broadcaster,
                                        self.broadcast_time,
-                                       self.title.encode('ascii', 'ignore'),
-                                       self.artist.encode('ascii', 'ignore'),
+                                       self.title,
+                                       self.artist,
                                        self.album,
                                        self.label,
-                                       self.year)
-        except UnicodeEncodeError:
-            return "{} - {} \n" \
-                   "Title: {}\n" \
-                   "Artist: {}\n" \
-                   "Album: {}\n" \
-                   "Label: {}\n" \
-                   "Year: {}\n".format(self.broadcaster.encode('ascii', 'ignore'),
-                                       self.broadcast_time,
-                                       self.title.encode('ascii', 'ignore'),
-                                       self.artist.encode('ascii', 'ignore'),
-                                       self.album.encode('ascii', 'ignore'),
-                                       self.label.encode('ascii', 'ignore'),
                                        self.year)

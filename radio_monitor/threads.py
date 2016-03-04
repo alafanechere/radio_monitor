@@ -64,5 +64,5 @@ class Telex(threading.Thread):
     def check_new_track(self):
         for pinger in self.pingers:
             if pinger.new_meta:
-                self.logger.info(str(pinger.current_meta))
+                self.logger.info(unicode(pinger.current_meta))
                 pinger.new_meta = False

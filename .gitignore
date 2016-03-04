@@ -2,3 +2,5 @@
 *.pyc
 Radio_Monitor.egg-info
 .cache
+.DS_Store
+tracklisting.log
